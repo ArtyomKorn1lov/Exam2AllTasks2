@@ -103,7 +103,7 @@ if ($this->StartResultCache()) {
     }
     $arResult["ITEMS"] = $arNews;
     $arResult["PRODUCT_COUNT"] = $productCount;
-    $this->SetResultCacheKeys("PRODUCT_COUNT");
+    $this->SetResultCacheKeys(["PRODUCT_COUNT"]);
     $this->includeComponentTemplate();
 }
 
