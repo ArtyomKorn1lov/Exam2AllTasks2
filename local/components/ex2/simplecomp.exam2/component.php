@@ -57,7 +57,7 @@ if ($this->StartResultCache(false, $USER->GetGroups())) {
     }
     foreach ($firms as &$firm) {
         foreach ($products as $product) {
-            if (in_array($firm["ID"], $product[$arParams["CLASSIFIRE_PROPERTY_CODE"]])) {
+            if (isset($product[$arParams["CLASSIFIRE_PROPERTY_CODE"]]) && !empty($product[$arParams["CLASSIFIRE_PROPERTY_CODE"]]) && in_array($firm["ID"], $product[$arParams["CLASSIFIRE_PROPERTY_CODE"]])) {
                 $firm["PRODUCTS"][] = [
                     "NAME" => $product["NAME"],
                     "PRICE" => $product["PROPERTY_PRICE_VALUE"],

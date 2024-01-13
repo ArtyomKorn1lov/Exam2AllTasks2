@@ -86,7 +86,7 @@ if ($this->StartResultCache()) {
     /** Компонуем товары к новостям, если они есть в разделах */
     foreach ($arNews as &$new) {
         foreach ($arProducts as $product) {
-            if (in_array($product["IBLOCK_SECTION_ID"], $new["SECTIONS_IDS"])) {
+            if (isset($new["SECTIONS_IDS"]) && !empty($new["SECTIONS_IDS"]) && in_array($product["IBLOCK_SECTION_ID"], $new["SECTIONS_IDS"])) {
                 $new["PRODUCTS"][] = [
                     "NAME" => $product["NAME"],
                     "ARTNUMBER" => $product["PROPERTY_ARTNUMBER_VALUE"],
