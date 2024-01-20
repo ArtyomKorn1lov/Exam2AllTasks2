@@ -14,6 +14,10 @@ $arComponentParameters = array(
             "NAME" => GetMessage("SIMPLECOMP_EXAM2_CLASSIFIRE_IBLOCK_ID"),
             "TYPE" => "STRING",
         ),
+        "TOP_COUNT" => array(
+            "NAME" => GetMessage("SIMPLECOMP_EXAM2_TOP_COUNT"),
+            "TYPE" => "STRING",
+        ),
         "DETAIL_URL" => CIBlockParameters::GetPathTemplateParam(
             "DETAIL",
             "DETAIL_URL",

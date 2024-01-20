@@ -12,7 +12,8 @@ $APPLICATION->SetTitle("Простой компонент 2");
 		"PRODUCTS_IBLOCK_ID" => "2",
 		"TEMPLATE_DETAIL_URL" => "/catalog_exam/#SECTION_ID#/#ELEMENT_CODE#",
 		"COMPONENT_TEMPLATE" => ".default",
-		"DETAIL_URL" => "catalog_exam/#SECTION_ID#/#ELEMENT_CODE#"
+		"DETAIL_URL" => "catalog_exam/#SECTION_ID#/#ELEMENT_CODE#",
+		"TOP_COUNT" => "2"
 	),
 	false
 );?><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

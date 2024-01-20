@@ -10,6 +10,7 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @global CUser $USER */
 /** @global CMain $APPLICATION */
 ?>
+<p><?=GetMessage("SIMPLECOMP_EXAM2_TIME_MARK_TITLE")?><?=time()?></p>
 <p>Фильтр: <a href="<?=$arResult["FILTER_URL"]?>">/exam2/ex2-48/?F=Y</a></p>
 ---
 <p><b><?=GetMessage("SIMPLECOMP_EXAM2_CAT_TITLE")?></b></p>
@@ -38,3 +39,6 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
     <?php } ?>
     </ul>
 <?php } ?>
+---
+<p><b><?=GetMessage("SIMPLECOMP_EXAM2_NAV_TITLE")?></b></p>
+<?=$arResult["NAV_STRING"]?>

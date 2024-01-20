@@ -29,21 +29,46 @@ if (!isset($arParams["CLASSIFIRE_IBLOCK_ID"]) || empty($arParams["CLASSIFIRE_IBL
 if (!isset($arParams["CLASSIFIRE_PROPERTY_CODE"]) || empty($arParams["CLASSIFIRE_PROPERTY_CODE"])) {
     $arParams["CLASSIFIRE_PROPERTY_CODE"] = "FIRM";
 }
+if (!isset($arParams["TOP_COUNT"]) || empty($arParams["TOP_COUNT"])) {
+    $arParams["TOP_COUNT"] = 100;
+}
 if (!isset($arParams["DETAIL_URL"]) || empty($arParams["DETAIL_URL"])) {
     $arParams["DETAIL_URL"] = "catalog_exam/#SECTION_ID#/#ELEMENT_CODE#";
 }
 
 global $USER;
 global $APPLICATION;
+global $CACHE_MANAGER;
 $cFilter = false;
 if (isset($_REQUEST["F"])) {
     $cFilter = true;
 }
-if ($this->StartResultCache(false, [$USER->GetGroups(), $cFilter])) {
-    $rsElements = CIBlockElement::GetList([], ["IBLOCK_ID" => $arParams["CLASSIFIRE_IBLOCK_ID"], "ACTIVE" => "Y"], false, false, ["ID", "NAME"]);
+$page = 1;
+if (isset($_REQUEST["PAGEN_1"])) {
+    $page = (int)htmlspecialchars($_REQUEST["PAGEN_1"]);
+}
+$arAdminButtons = CIBlock::GetPanelButtons($arParams["PRODUCTS_IBLOCK_ID"]);
+$this->AddIncludeAreaIcon(
+    [
+        "TITLE" => GetMessage("SIMPLECOMP_EXAM2_SUBMENU_TITLE"),
+        "URL" => $arAdminButtons['submenu']['element_list']['ACTION_URL'],
+        "IN_PARAMS_MENU" => true,
+    ]
+);
+if ($this->StartResultCache(false, [$USER->GetGroups(), $cFilter, $page], "/servicesIblock")) {
+    $CACHE_MANAGER->RegisterTag("iblock_id_3");
+    $arPagination = false;
+    if ($arParams["TOP_COUNT"] > 0) {
+        $arPagination = [
+            "nPageSize" => $arParams["TOP_COUNT"],
+            "iNumPage" => $page
+        ];
+    }
+    $rsElements = CIBlockElement::GetList([], ["IBLOCK_ID" => $arParams["CLASSIFIRE_IBLOCK_ID"], "ACTIVE" => "Y"], false, $arPagination, ["ID", "NAME"]);
     $firms = [];
     $firmsIds = [];
     $classifireCount = 0;
+    $navString = $rsElements->GetPageNavStringEx($navComponentObject, GetMessage("SIMPLECOMP_EXAM2_NAV_MESSAGE"), '', 'Y');
     while ($item = $rsElements->Fetch()) {
         $firms[] = $item;
         $firmsIds[] = $item["ID"];
@@ -111,6 +136,7 @@ if ($this->StartResultCache(false, [$USER->GetGroups(), $cFilter])) {
     $arResult["SECTION_COUNT"] = $classifireCount;
     $arResult["ADD_LINK"] = $addLink;
     $arResult["ADD_TEXT"] = $addText;
+    $arResult["NAV_STRING"] = $navString;
     $this->SetResultCacheKeys(["SECTION_COUNT"]);
     $this->includeComponentTemplate();
 }
