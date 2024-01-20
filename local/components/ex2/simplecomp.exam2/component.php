@@ -66,8 +66,26 @@ if ($this->StartResultCache(false, [$USER->GetGroups(), $cFilter])) {
     );
     $products = [];
     $rsElements->SetUrlTemplates($arParams["DETAIL_URL"]);
+    $addElementFlag = true;
+    $addLink = "";
+    $addText = "";
     while ($obElement = $rsElements->GetNextElement()) {
         $item = $obElement->GetFields();
+        $arButtons = CIBlock::GetPanelButtons(
+            $item["IBLOCK_ID"],
+            $item["ID"],
+            0,
+            array("SECTION_BUTTONS" => false, "SESSID" => false)
+        );
+        if ($addElementFlag) {
+            $addText = $arButtons["edit"]["add_element"]["TEXT"];
+            $addLink = $arButtons["edit"]["add_element"]["ACTION_URL"];
+            $addElementFlag = false;
+        }
+        $item["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+        $item["EDIT_TEXT"] = $arButtons["edit"]["edit_element"]["TEXT"];
+        $item["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
+        $item["DELETE_TEXT"] = $arButtons["edit"]["delete_element"]["TEXT"];
         $item[$arParams["CLASSIFIRE_PROPERTY_CODE"]] = $obElement->GetProperty($arParams["CLASSIFIRE_PROPERTY_CODE"])["VALUE"];
         $products[] = $item;
     }
@@ -75,20 +93,24 @@ if ($this->StartResultCache(false, [$USER->GetGroups(), $cFilter])) {
         foreach ($products as $product) {
             if (isset($product[$arParams["CLASSIFIRE_PROPERTY_CODE"]]) && !empty($product[$arParams["CLASSIFIRE_PROPERTY_CODE"]]) && in_array($firm["ID"], $product[$arParams["CLASSIFIRE_PROPERTY_CODE"]])) {
                 $firm["PRODUCTS"][] = [
+                    "ID" => $product["ID"],
                     "NAME" => $product["NAME"],
                     "PRICE" => $product["PROPERTY_PRICE_VALUE"],
                     "MATERIAL" => $product["PROPERTY_MATERIAL_VALUE"],
                     "ARTNUMBER" => $product["PROPERTY_ARTNUMBER_VALUE"],
-                    "DETAIL_PAGE_URL" => $product["DETAIL_PAGE_URL"]
+                    "DETAIL_PAGE_URL" => $product["DETAIL_PAGE_URL"],
+                    "EDIT_LINK" => $product["EDIT_LINK"],
+                    "EDIT_TEXT" => $product["EDIT_TEXT"],
+                    "DELETE_LINK" => $product["DELETE_LINK"],
+                    "DELETE_TEXT" => $product["DELETE_TEXT"],
                 ];
             }
         }
     }
-    foreach ($firms as &$firm) {
-        unset($firm["ID"]);
-    }
     $arResult["ITEMS"] = $firms;
     $arResult["SECTION_COUNT"] = $classifireCount;
+    $arResult["ADD_LINK"] = $addLink;
+    $arResult["ADD_TEXT"] = $addText;
     $this->SetResultCacheKeys(["SECTION_COUNT"]);
     $this->includeComponentTemplate();
 }
