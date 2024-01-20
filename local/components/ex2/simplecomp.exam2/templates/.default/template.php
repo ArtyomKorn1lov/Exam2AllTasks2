@@ -10,6 +10,7 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @global CUser $USER */
 /** @global CMain $APPLICATION */
 ?>
+<p>Фильтр: <a href="<?=$arResult["FILTER_URL"]?>">/exam2/ex2-48/?F=Y</a></p>
 ---
 <p><b><?=GetMessage("SIMPLECOMP_EXAM2_CAT_TITLE")?></b></p>
 <?php if(isset($arResult["ITEMS"]) && !empty($arResult["ITEMS"])) { ?>

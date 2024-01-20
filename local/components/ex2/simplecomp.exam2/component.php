@@ -35,7 +35,11 @@ if (!isset($arParams["DETAIL_URL"]) || empty($arParams["DETAIL_URL"])) {
 
 global $USER;
 global $APPLICATION;
-if ($this->StartResultCache(false, $USER->GetGroups())) {
+$cFilter = false;
+if (isset($_REQUEST["F"])) {
+    $cFilter = true;
+}
+if ($this->StartResultCache(false, [$USER->GetGroups(), $cFilter])) {
     $rsElements = CIBlockElement::GetList([], ["IBLOCK_ID" => $arParams["CLASSIFIRE_IBLOCK_ID"], "ACTIVE" => "Y"], false, false, ["ID", "NAME"]);
     $firms = [];
     $firmsIds = [];
@@ -45,9 +49,17 @@ if ($this->StartResultCache(false, $USER->GetGroups())) {
         $firmsIds[] = $item["ID"];
         $classifireCount++;
     }
+    $arFilter = ["IBLOCK_ID" => $arParams["PRODUCTS_IBLOCK_ID"], "ACTIVE" => "Y", "PROPERTY_".$arParams["CLASSIFIRE_PROPERTY_CODE"] => $firmsIds];
+    if ($cFilter) {
+        $arFilter[] = [
+            "LOGIC" => "OR",
+            ["<=PROPERTY_PRICE" => 1700, "PROPERTY_MATERIAL" => "Дерево, ткань"],
+            ["<PROPERTY_PRICE" => 1500, "PROPERTY_MATERIAL" => "Металл, пластик"]
+        ];
+    }
     $rsElements = CIBlockElement::GetList(
         ["NAME" => "ASC", "SORT" => "ASC"],
-        ["IBLOCK_ID" => $arParams["PRODUCTS_IBLOCK_ID"], "ACTIVE" => "Y", "PROPERTY_".$arParams["CLASSIFIRE_PROPERTY_CODE"] => $firmsIds],
+        $arFilter,
         false,
         false,
         ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "NAME", "PROPERTY_PRICE", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "DETAIL_PAGE_URL"]
