@@ -14,11 +14,11 @@ $arComponentParameters = array(
             "NAME" => GetMessage("SIMPLECOMP_EXAM2_CLASSIFIRE_IBLOCK_ID"),
             "TYPE" => "STRING",
         ),
-        "TEMPLATE_DETAIL_URL" => CIBlockParameters::GetPathTemplateParam(
+        "DETAIL_URL" => CIBlockParameters::GetPathTemplateParam(
             "DETAIL",
             "DETAIL_URL",
             GetMessage("SIMPLECOMP_EXAM2_DETAIL_TEMPLATE_URL"),
-            "",
+            "catalog_exam/#SECTION_ID#/#ELEMENT_CODE#",
             "URL_TEMPLATES"
         ),
         "CLASSIFIRE_PROPERTY_CODE" => array(

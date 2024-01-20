@@ -29,6 +29,9 @@ if (!isset($arParams["CLASSIFIRE_IBLOCK_ID"]) || empty($arParams["CLASSIFIRE_IBL
 if (!isset($arParams["CLASSIFIRE_PROPERTY_CODE"]) || empty($arParams["CLASSIFIRE_PROPERTY_CODE"])) {
     $arParams["CLASSIFIRE_PROPERTY_CODE"] = "FIRM";
 }
+if (!isset($arParams["DETAIL_URL"]) || empty($arParams["DETAIL_URL"])) {
+    $arParams["DETAIL_URL"] = "catalog_exam/#SECTION_ID#/#ELEMENT_CODE#";
+}
 
 global $USER;
 global $APPLICATION;
@@ -43,13 +46,14 @@ if ($this->StartResultCache(false, $USER->GetGroups())) {
         $classifireCount++;
     }
     $rsElements = CIBlockElement::GetList(
-        [],
+        ["NAME" => "ASC", "SORT" => "ASC"],
         ["IBLOCK_ID" => $arParams["PRODUCTS_IBLOCK_ID"], "ACTIVE" => "Y", "PROPERTY_".$arParams["CLASSIFIRE_PROPERTY_CODE"] => $firmsIds],
         false,
         false,
-        ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "NAME", "PROPERTY_PRICE", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER"]
+        ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "NAME", "PROPERTY_PRICE", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "DETAIL_PAGE_URL"]
     );
     $products = [];
+    $rsElements->SetUrlTemplates($arParams["DETAIL_URL"]);
     while ($obElement = $rsElements->GetNextElement()) {
         $item = $obElement->GetFields();
         $item[$arParams["CLASSIFIRE_PROPERTY_CODE"]] = $obElement->GetProperty($arParams["CLASSIFIRE_PROPERTY_CODE"])["VALUE"];
@@ -63,6 +67,7 @@ if ($this->StartResultCache(false, $USER->GetGroups())) {
                     "PRICE" => $product["PROPERTY_PRICE_VALUE"],
                     "MATERIAL" => $product["PROPERTY_MATERIAL_VALUE"],
                     "ARTNUMBER" => $product["PROPERTY_ARTNUMBER_VALUE"],
+                    "DETAIL_PAGE_URL" => $product["DETAIL_PAGE_URL"]
                 ];
             }
         }

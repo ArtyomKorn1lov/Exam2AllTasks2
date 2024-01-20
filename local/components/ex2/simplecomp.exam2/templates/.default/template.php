@@ -24,6 +24,7 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
                         <?=$product["PRICE"]?> -
                         <?=$product["MATERIAL"]?> -
                         <?=$product["ARTNUMBER"]?>
+                         (<?=$product["DETAIL_PAGE_URL"]?>)
                     </li>
                 <?php } ?>
             </ul>
